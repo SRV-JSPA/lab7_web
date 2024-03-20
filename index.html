@@ -11,16 +11,14 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      async function api() {
-        const [posts, setPosts] = React.useState([]);
-
+      const Api = async () => {
         const datos = await fetch("http://localhost:3000/posts");
         const json = await datos.json();
 
-        setPosts(json.results);
+        return json;
+      };
 
-        return posts
-      }
+      Api().then(() => console.log("Api:", Api));
 
       function Header() {
         return (
@@ -43,10 +41,6 @@
             </div>
           </nav>
         );
-
-        React.useEffect(() => {
-          api();
-        }, []);
       }
 
       function Footer() {
@@ -65,17 +59,67 @@
         );
       }
 
-      function Posts() {
-        return <section></section>;
+      function Post({ id, title, content, created_at, car_name, company }) {
+        return (
+          <article className="post">
+            <div className="publicacion">
+              <img src="/images/carro.webp" alt="Imagen de carro" />
+            </div>
+
+            <div className="contenido-post">
+              <h3>{title}</h3>
+              <p>{content}</p>
+              <p>{created_at}</p>
+            </div>
+          </article>
+        );
+      }
+
+      function Posts({ post }) {
+        return (
+          <section className="posts">
+            <div className="contenedor contenedor-posts">
+              {post.map(
+                ({ id, title, content, created_at, car_name, company }) => (
+                  <Post
+                    key={id}
+                    id={id}
+                    title={title}
+                    content={content}
+                    created_at={created_at}
+                    car_name={car_name}
+                    company={company}
+                  />
+                )
+              )}
+            </div>
+          </section>
+        );
+      }
+
+      function App() {
+        const [posts, setPosts] = React.useState([]);
+
+        const datos = async () => {
+          const postsD = await Api();
+          setPosts(postsD);
+        };
+
+        React.useEffect(() => {
+          datos();
+        }, []);
+
+        return (
+          <>
+            <Header />
+            <Posts post={posts} />
+            <Footer />
+          </>
+        );
       }
 
       const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(
-        <>
-          <Header />
-          <Footer />
-        </>
-      );
+      root.render(<App />);
     </script>
   </body>
 </html>
