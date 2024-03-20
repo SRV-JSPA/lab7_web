@@ -2,19 +2,80 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Button State Example</title>
+    <title>Blog</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      
-      
+      async function api() {
+        const [posts, setPosts] = React.useState([]);
+
+        const datos = await fetch("http://localhost:3000/posts");
+        const json = await datos.json();
+
+        setPosts(json.results);
+
+        return posts
+      }
+
+      function Header() {
+        return (
+          <nav>
+            <div className="contenedor contenedor-nav">
+              <img
+                className="nav-logo"
+                src="images/logoblog.png"
+                alt="Descripción de la imagen"
+              />
+
+              <ul className="nav-menu">
+                <li>Crear un post</li>
+                <li>Autores</li>
+                <li>Sobre Mi</li>
+                <li>Log Out</li>
+              </ul>
+
+              <button className="nav-res-menu">Menu</button>
+            </div>
+          </nav>
+        );
+
+        React.useEffect(() => {
+          api();
+        }, []);
+      }
+
+      function Footer() {
+        return (
+          <footer>
+            <ul className="footer">
+              <li>Crear un post</li>
+              <li>Autores</li>
+              <li>Sobre Mi</li>
+              <li>Log Out</li>
+            </ul>
+            <div className="derechos-footer">
+              <small>Todos los derechos reservados &copy;</small>
+            </div>
+          </footer>
+        );
+      }
+
+      function Posts() {
+        return <section></section>;
+      }
 
       const root = ReactDOM.createRoot(document.getElementById("root"));
-      root.render(<App />);
+      root.render(
+        <>
+          <Header />
+          <Footer />
+        </>
+      );
     </script>
   </body>
 </html>
