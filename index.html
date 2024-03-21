@@ -6,6 +6,7 @@
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
@@ -18,7 +19,6 @@
         return json;
       };
 
-      Api().then(() => console.log("Api:", Api));
 
       function Header() {
         return (
@@ -72,10 +72,21 @@
               <p>{created_at}</p>
             </div>
           </article>
+
         );
       }
 
+       Post.propTypes = {
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        content: PropTypes.string.isRequired,
+        created_at: PropTypes.string.isRequired,
+        car_name: PropTypes.string.isRequired,
+        company: PropTypes.string.isRequired
+       };
+
       function Posts({ post }) {
+        console.log(typeof post)
         return (
           <section className="posts">
             <div className="contenedor contenedor-posts">
@@ -96,6 +107,10 @@
           </section>
         );
       }
+
+      Posts.propTypes = {
+        post: PropTypes.object.isRequired
+       };
 
       function App() {
         const [posts, setPosts] = React.useState([]);

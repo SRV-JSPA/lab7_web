@@ -83,6 +83,7 @@ nav {
     height: 100%;
 }
 
+
 .nav-res-menu {
     display: none;
 }
@@ -92,6 +93,8 @@ nav {
     align-items: center;
     gap: 3rem;
 }
+
+
 
 /* Footer */
 footer {
@@ -123,9 +126,31 @@ footer {
 /* Pagina principal */
 .contenedor-posts{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 4rem;
 }
+
+.contenedor-posts img{
+        display: block;
+        object-fit: cover;
+        max-width: 100%;
+}
+
+@media (min-width: 768px) {
+    .contenedor-posts {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .contenedor-posts img {
+        display: block;
+        object-fit: cover;
+        max-width: 100%;
+    }
+}
+
+
 
 .post {
     background: rgba(245, 245, 245, 0.5);
