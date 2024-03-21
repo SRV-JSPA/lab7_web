@@ -12,12 +12,17 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      const Api = async () => {
+      async function Api() {
         const datos = await fetch("http://localhost:3000/posts");
+        if (!datos.ok) {
+          throw new Error("No se pudo conectar al Api");
+        }
         const json = await datos.json();
-
+        if (!Array.isArray(json)) {
+          throw new Error("Se esta recibiendo un dato no esperado");
+        }
         return json;
-      };
+      }
 
       function Header() {
         const [resNav, setResNav] = React.useState(
@@ -41,12 +46,14 @@
                 alt="Descripción de la imagen"
               />
 
-              {resNav && <ul className="nav-menu">
-                <li>Crear un post</li>
-                <li>Autores</li>
-                <li>Sobre Mi</li>
-                <li>Log Out</li>
-              </ul>}
+              {resNav && (
+                <ul className="nav-menu">
+                  <li>Crear un post</li>
+                  <li>Autores</li>
+                  <li>Sobre Mi</li>
+                  <li>Log Out</li>
+                </ul>
+              )}
 
               <button
                 className="nav-res-menu"
@@ -131,11 +138,20 @@
       };
 
       function App() {
+        const [loading, setLoading] = React.useState(true);
         const [posts, setPosts] = React.useState([]);
+        const [error, setError] = React.useState(null); 
 
         const datos = async () => {
-          const postsD = await Api();
-          setPosts(postsD);
+          try {
+            const postsD = await Api();
+            setPosts(postsD);
+            setLoading(false);
+          } catch (error) {
+            console.error("Error al obtener los datos:", error);
+            setError(error.message); 
+            setLoading(false);
+          }
         };
 
         React.useEffect(() => {
@@ -145,7 +161,13 @@
         return (
           <>
             <Header />
-            <Posts post={posts} />
+            {loading ? (
+              <div className="loading">Loading...</div>
+            ) : error ? (
+              <div className="error">{error}</div> 
+            ) : (
+              <Posts post={posts} />
+            )}
             <Footer />
           </>
         );
