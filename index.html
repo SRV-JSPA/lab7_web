@@ -19,8 +19,19 @@
         return json;
       };
 
-
       function Header() {
+        const [resNav, setResNav] = React.useState(
+          window.innerWidth > 800 ? true : false
+        );
+
+        const handler = () => {
+          if (window.innerWidth < 800) {
+            setResNav(false);
+          } else {
+            setResNav(true);
+          }
+        };
+
         return (
           <nav>
             <div className="contenedor contenedor-nav">
@@ -30,14 +41,23 @@
                 alt="Descripción de la imagen"
               />
 
-              <ul className="nav-menu">
+              {resNav && <ul className="nav-menu">
                 <li>Crear un post</li>
                 <li>Autores</li>
                 <li>Sobre Mi</li>
                 <li>Log Out</li>
-              </ul>
+              </ul>}
 
-              <button className="nav-res-menu">Menu</button>
+              <button
+                className="nav-res-menu"
+                onClick={() => setResNav(!resNav)}
+              >
+                {resNav ? (
+                  <img src="images/cerrar.png" alt="menu cerrar" />
+                ) : (
+                  <img src="images/menuH.png" alt="menu hamburguesa" />
+                )}
+              </button>
             </div>
           </nav>
         );
@@ -72,21 +92,19 @@
               <p>{created_at}</p>
             </div>
           </article>
-
         );
       }
 
-       Post.propTypes = {
+      Post.propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
         content: PropTypes.string.isRequired,
         created_at: PropTypes.string.isRequired,
         car_name: PropTypes.string.isRequired,
-        company: PropTypes.string.isRequired
-       };
+        company: PropTypes.string.isRequired,
+      };
 
       function Posts({ post }) {
-        
         return (
           <section className="posts">
             <div className="contenedor contenedor-posts">
@@ -109,8 +127,8 @@
       }
 
       Posts.propTypes = {
-        post: PropTypes.object.isRequired
-       };
+        post: PropTypes.object.isRequired,
+      };
 
       function App() {
         const [posts, setPosts] = React.useState([]);
@@ -132,8 +150,6 @@
           </>
         );
       }
-
-      
 
       const root = ReactDOM.createRoot(document.getElementById("root"));
       root.render(<App />);
